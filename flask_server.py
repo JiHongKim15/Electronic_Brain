@@ -39,10 +39,10 @@ def index():
     
     #장보기
     #item은 dialogflow에서 목록을 받아와서 검색
-    if intent == '//장보기intent//':
+    if intent == 'menu-search':
         result = Shopping(item)
     #합계
-    elif intent == '//합계intent':
+    elif intent == 'menu-last':
         result = Sum()
     elif intent == '//목록보기':
         result = View_List()
