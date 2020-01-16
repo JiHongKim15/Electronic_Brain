@@ -119,9 +119,9 @@ def Plus_List(namelist, pricelist):
 # 리스트 보기
 def View_List():
     cur = conn.cursor()
-    
+
     # 장바구니 db 가져옴
-    sql = "SELECT * from orderlist "
+    sql = "SELECT * from orderlist where product_name;"
     cur.execute(sql)  # 쿼리 수행
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
