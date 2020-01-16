@@ -66,8 +66,9 @@ def index():
 def webhook():
     req = request.get_json(force=True)
     action = req['queryResult']['action']
-    if action == 'interest':
-        name = req['queryResult']['parameters']['roominfomation']
+    if action == 'aa':
+        name = req['queryResult']['parameters']['item']
+        item = name
 
     else:
         return "test"
