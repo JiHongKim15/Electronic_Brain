@@ -33,14 +33,17 @@ def index():
     print(type(request.json))
 
     request_json = request.json
-    intent = get_intent_from_request(request_json)
+    #intent = get_intent_from_request(request_json)
+    query = ["queryResult"]["parameters"]["item"]
+    #result = ''
 
-    result = ''
+    intent =
+    '''
     
     #장보기
     #item은 dialogflow에서 목록을 받아와서 검색
-    if intent == '//장보기intent//':
-        result = Shopping(item)
+    if intent == 'menu - search':
+        result = Shopping(item) #item = 라면
     #합계
     elif intent == '//합계intent':
         result = Sum()
@@ -52,7 +55,7 @@ def index():
     response_dict['response']['outputSpeech']['text'] = result
 
     return jsonify(json.dumps(response_dict))
-
+'''
 
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
