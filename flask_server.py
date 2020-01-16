@@ -129,14 +129,13 @@ def View_List():
 
     cnt = 1
     for i in rows:
-        for j in i:
-            # view list
-            # 1. [품목/가격]
-            # 2. [품목/가격]
-            # 3. [품목/가격]
-            # 위와 같은 형태로 viewlist 생성하여 출력
-            viewlist.append(cnt + ". " + j. + "/" + j.price + "\n") #품목
-          
+        # view list
+        # 1. [품목/가격]
+        # 2. [품목/가격]
+        # 3. [품목/가격]
+        # 위와 같은 형태로 viewlist 생성하여 출력
+        viewlist.append(cnt + ". " + i['product_name'] + "/" + i['price'] + "\n") #품목
+        
     return viewlist
 
 # 크롤링
