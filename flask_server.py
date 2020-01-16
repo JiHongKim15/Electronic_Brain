@@ -3,27 +3,26 @@ import json
 import os
 import requests
 from bs4 import BeautifulSoup
+import pymysql
 
 app = Flask(__name__)
 
-
 # mysql 접속
-conn = pymysql.connect(host='45.119.146.152', port=1024, user='trivle', password='Trivle_96', db='trivle',
+conn = pymysql.connect(host='localhost', port=3306, user='root', password='toor', db='brain',
                        use_unicode=True, charset='utf8')
-
 
 # IP address of NodeMCU
 address = 'http://192.168.0.6'
 
 response_dict = {"response": {
-"outputSpeech": {
-"text": "",
-"type": "PlainText"
+    "outputSpeech": {
+        "text": "",
+        "type": "PlainText"
+    },
+    "shouldEndSession": True
 },
-"shouldEndSession": True
-},
-"sessionAttributes": {},
-"version": "1.0"
+    "sessionAttributes": {},
+    "version": "1.0"
 }
 
 
@@ -31,38 +30,42 @@ response_dict = {"response": {
 def index():
     print(type(request.data))
     print(type(request.json))
-
     request_json = request.json
-    #intent = get_intent_from_request(request_json)
-    query = ["queryResult"]["parameters"]["item"]
-    #result = ''
+    # intent = get_intent_from_request(request_json)
 
-    intent =
+    req = request.get_json(force=True)
+    action = req['queryResult']['action']  # 1
+    if action == 'aa':
+        name = req['queryResult']['parameters']['size']  # 2
+        print(name)
+
+    result = ''
+    item = name;
+    # 장보기
+    # item은 dialogflow에서 목록을 받아와서 검색
     '''
-    
-    #장보기
-    #item은 dialogflow에서 목록을 받아와서 검색
-    if intent == 'menu - search':
-        result = Shopping(item) #item = 라면
+    if intent == 'menu-search':
+        result = Shopping(item)
     #합계
-    elif intent == '//합계intent':
+    elif intent == 'menu-last':
         result = Sum()
     elif intent == '//목록보기':
         result = View_List()
     else:
         result = Error()
-
+    '''
     response_dict['response']['outputSpeech']['text'] = result
 
     return jsonify(json.dumps(response_dict))
-'''
+
 
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
     req = request.get_json(force=True)
     action = req['queryResult']['action']
-    if action == 'interest':
-        name = req['queryResult']['parameters']['roominfomation']
+    if action == 'aa':
+        name = req['queryResult']['parameters']['item']
+        item = name
 
     else:
         return "test"
@@ -73,7 +76,8 @@ def webhook():
 def Error():
     return "error"
 
-#장보기 main
+
+# 장보기 main
 def Shopping(item):
     namelist, pricelist = Name_Crawling(item)
     Plus_List(namelist, pricelist)
@@ -81,10 +85,10 @@ def Shopping(item):
     return "Ok"
 
 
-# 장바구니db 가져오기
+# 계산
 def Sum():
     cur = conn.cursor()
-    sql = 'SELECT * from //장바구니db name//;'
+    sql = "SELECT * from orderlist where price"
     cur.execute(sql)  # 쿼리 수행
     conn.commit()
 
@@ -92,13 +96,10 @@ def Sum():
 
     sum = 0
     for i in rows:
-        for j in i:
-            # 가격을 가져와서 +   
-            sum += j.가격
-
+        sum += i['pirce']
 
     # 장바구니 초기화
-    reset_sql = "Truncate table //장바구니db name//"
+    reset_sql = "DELETE from orderlist"
     cur.execute(reset_sql)  # 쿼리 수행
     conn.commit()
 
@@ -108,38 +109,39 @@ def Sum():
 # 장바구니에 목록 추가
 def Plus_List(namelist, pricelist):
     cur = conn.cursor()
-    
+
     # 장바구니 db 이용하여 추가
-    # 라면 / 가격 형태
-    
+    # 항목 / 가격 형태
+
     for cnt in len(namelist):
-        sql = "Insert into brain values (" + namelist[cnt] + ", " + pricelist[cnt] + ")" "
+        sql = "INSERT into orderlist values ('" + namelist[cnt] + " ', " + pricelist[cnt] + ')'
         cur.execute(sql)
 
     return "ok"
 
+
 # 리스트 보기
 def View_List():
     cur = conn.cursor()
-    
+
     # 장바구니 db 가져옴
-    sql = 'SELECT * from //장바구니db name//;'
+    sql = "SELECT * from orderlist where product_name;"
     cur.execute(sql)  # 쿼리 수행
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
-    viewlist[] = {}
+    viewlist = []
 
     cnt = 1
     for i in rows:
-        for j in i:
-            # view list
-            # 1. [품목/가격]
-            # 2. [품목/가격]
-            # 3. [품목/가격]
-            # 위와 같은 형태로 viewlist 생성하여 출력
-            viewlist.append(cnt + ". " + j.품목 + "/" + j.가격 + "\n") #품목
-          
+        # view list
+        # 1. [품목/가격]
+        # 2. [품목/가격]
+        # 3. [품목/가격]
+        # 위와 같은 형태로 viewlist 생성하여 출력
+        viewlist.append(cnt + ". " + i['product_name'] + "/" + i['price'] + "원")  # 품목
+
     return viewlist
+
 
 # 크롤링
 def Name_Crawling(menu, sort="asc"):
@@ -172,6 +174,7 @@ def Name_Crawling(menu, sort="asc"):
         real_name.append(str(i)[title_idx + 7:-4])
 
     return real_name, real_price
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
