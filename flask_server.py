@@ -57,9 +57,8 @@ def Error():
 
 #장보기 main
 def Shopping(item):
-    namelist = Name_Crawling()
-    pricelist = Price_Crawling()
-    Plus_List()
+    namelist, pricelist = Name_Crawling(item)
+    Plus_List(namelist, pricelist)
 
     return "Ok"
 
@@ -78,16 +77,18 @@ def Sum():
         for j in i:
             # 가격을 가져와서 +   
             sum += j.가격
-    # 장바구니 초기화
 
+
+    # 장바구니 초기화
     reset_sql = "Truncate table //장바구니db name//"
     cur.execute(reset_sql)  # 쿼리 수행
     conn.commit()
-    return ""
+
+    return sum
 
 
 # 장바구니에 목록 추가
-def  Plus_List(item):
+def Plus_List(namelist, pricelist):
     cur = conn.cursor()
     
     # 장바구니 db 가져옴
@@ -97,6 +98,10 @@ def  Plus_List(item):
 
     # 장바구니 db 이용하여 추가
     # 라면 / 가격 형태
+
+    for i in rows:
+        for j in i:
+            
 
     return intent
 
@@ -124,7 +129,7 @@ def View_List():
     return viewlist
 
 # 크롤링
-def Name_Crawling(menu, sort):
+def Name_Crawling(menu, sort="asc"):
     # "asc" : 낮은 가격순
     # "dsc" : 높은 가격순
     url = "https://search.shopping.naver.com/search/all.nhn?origQuery=" + menu + "&pagingIndex=1&pagingSize=40&viewType=list&sort=price_" + sort + "&query=" + menu
