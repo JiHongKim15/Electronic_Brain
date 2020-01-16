@@ -6,24 +6,10 @@ app = Flask(__name__)
 
 
 # mysql 접속
-conn = pymysql.connect(host='45.119.146.152', port=1024, user='trivle', password='Trivle_96', db='trivle',
+conn = pymysql.connect(host='177.0.0.1', port=3306, user='root', password='toor', db='brain',
                        use_unicode=True, charset='utf8')
 
-
-# IP address of NodeMCU
-address = 'http://192.168.0.6'
-
-response_dict = {"response": {
-"outputSpeech": {
-"text": "",
-"type": "PlainText"
-},
-"shouldEndSession": True
-},
-"sessionAttributes": {},
-"version": "1.0"
-}
-
+return conn
 
 @app.route('/', methods=['POST'])
 def index():
@@ -75,7 +61,7 @@ def Sum():
     
     # 장바구니 초기화
 
-    reset_sql = "Truncate table //장바구니db name//"
+#    reset_sql = "Truncate table //장바구니db name//"
     cur.execute(reset_sql)  # 쿼리 수행
     conn.commit()
     return ""
@@ -89,7 +75,6 @@ def  Plus_List(item):
     sql = 'SELECT * from //장바구니db name//;'
     cur.execute(sql)  # 쿼리 수행
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
-
     # 장바구니 db 이용하여 추가
     # 라면 / 가격 형태
 
