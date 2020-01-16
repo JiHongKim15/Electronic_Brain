@@ -38,12 +38,12 @@ def index():
     #장보기
     #item은 dialogflow에서 목록을 받아와서 검색
     if intent == '//장보기intent//':
-        result = Plus_List(item)
+        result = Shopping(item)
     #합계
     elif intent == '//합계intent':
         result = Sum()
     elif intent == '//목록보기':
-        result = 
+        result = View_List()
     else:
         result = handle_fallback_intent()
 
@@ -51,8 +51,16 @@ def index():
 
     return jsonify(json.dumps(response_dict))
 
+#장보기 main
+def Shopping(item):
+    namelist = Name_Crawling()
+    pricelist = Price_Crawling()
+    Plus_List()
 
-# 장바구니db  가져오기
+    return ""
+
+
+# 장바구니db 가져오기
 def Sum():
     cur = conn.cursor()
     sql = 'SELECT * from //장바구니db name//;'
@@ -92,8 +100,23 @@ def View_List():
     cur.execute(sql)  # 쿼리 수행
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
-    return ""
+    viewlist[] = {}
 
+    for i in rows:
+        for j in i:
+            viewlist.append()
+
+
+    return viewlist
+
+# 크롤링
+def Name_Crawling():
+    # 코드를 채워주세욤
+    return namelist
+
+def Price_Crawling():
+    
+    return pricelist
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
