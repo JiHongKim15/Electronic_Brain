@@ -3,6 +3,7 @@ import json
 import os
 import requests
 from bs4 import BeautifulSoup
+import pymysql
 
 app = Flask(__name__)
 
@@ -135,7 +136,7 @@ def View_List():
         # 3. [품목/가격]
         # 위와 같은 형태로 viewlist 생성하여 출력
         viewlist.append(cnt + ". " + i['product_name'] + "/" + i['price'] + "\n") #품목
-        
+
     return viewlist
 
 # 크롤링
