@@ -33,12 +33,20 @@ def index():
     print(type(request.data))
     print(type(request.json))
     request_json = request.json
-    intent = get_intent_from_request(request_json)
+    #intent = get_intent_from_request(request_json)
+
+    req = request.get_json(force=True)
+    action = req['queryResult']['action']  # 1
+    if action == 'aa':
+        name = req['queryResult']['parameters']['size']  # 2
+        print(name)
+
 
     result = ''
-    
+    item = name;
     #장보기
     #item은 dialogflow에서 목록을 받아와서 검색
+    '''
     if intent == 'menu-search':
         result = Shopping(item)
     #합계
@@ -48,7 +56,7 @@ def index():
         result = View_List()
     else:
         result = Error()
-
+    '''
     response_dict['response']['outputSpeech']['text'] = result
 
     return jsonify(json.dumps(response_dict))
