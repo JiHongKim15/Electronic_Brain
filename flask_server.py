@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 # mysql 접속
-conn = pymysql.connect(host='45.119.146.152', port=1024, user='trivle', password='Trivle_96', db='trivle',
+conn = pymysql.connect(host='localhost', port=1024, user='root', password='toor', db='brain',
                        use_unicode=True, charset='utf8')
 
 
@@ -66,7 +66,7 @@ def Shopping(item):
 # 장바구니db 가져오기
 def Sum():
     cur = conn.cursor()
-    sql = 'SELECT * from //장바구니db name//;'
+    sql = "SELECT * from orderlist where price"
     cur.execute(sql)  # 쿼리 수행
     conn.commit()
 
@@ -76,11 +76,11 @@ def Sum():
     for i in rows:
         for j in i:
             # 가격을 가져와서 +   
-            sum += j.가격
+            sum += j
 
 
     # 장바구니 초기화
-    reset_sql = "Truncate table //장바구니db name//"
+    reset_sql = "DELETE from orderlist"
     cur.execute(reset_sql)  # 쿼리 수행
     conn.commit()
 
@@ -92,7 +92,7 @@ def Plus_List(namelist, pricelist):
     cur = conn.cursor()
     
     # 장바구니 db 가져옴
-    sql = 'SELECT * from //장바구니db name//;'
+    sql = "SELECT * from orderlist where product_name;"
     cur.execute(sql)  # 쿼리 수행
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
@@ -110,7 +110,7 @@ def View_List():
     cur = conn.cursor()
     
     # 장바구니 db 가져옴
-    sql = 'SELECT * from //장바구니db name//;'
+    sql = "SELECT * from orderlist "
     cur.execute(sql)  # 쿼리 수행
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
