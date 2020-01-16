@@ -90,9 +90,7 @@ def Sum():
 
     sum = 0
     for i in rows:
-        for j in i:
-            # 가격을 가져와서 +   
-            sum += j
+        sum += i['pirce']
 
 
     # 장바구니 초기화
@@ -112,7 +110,7 @@ def Plus_List(namelist, pricelist):
     # 항목 / 가격 형태
     
     for cnt in len(namelist):
-        sql = 'Insert into brain values (" + namelist[cnt] + ", " + pricelist[cnt] + ")" '
+        sql = 'Insert into brain values (' + namelist[cnt] + ',' + pricelist[cnt] + '')'
         cur.execute(sql)
 
     return "ok"
