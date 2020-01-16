@@ -3,12 +3,13 @@ import json
 import os
 import requests
 from bs4 import BeautifulSoup
+import pymysql
 
 app = Flask(__name__)
 
 
 # mysql 접속
-conn = pymysql.connect(host='localhost', port=1024, user='root', password='toor', db='brain',
+conn = pymysql.connect(host='localhost', port=3306, user='root', password='toor', db='brain',
                        use_unicode=True, charset='utf8')
 
 
@@ -31,7 +32,6 @@ response_dict = {"response": {
 def index():
     print(type(request.data))
     print(type(request.json))
-
     request_json = request.json
     intent = get_intent_from_request(request_json)
 
