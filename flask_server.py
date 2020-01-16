@@ -1,134 +1,67 @@
-from flask import Flask, make_response, Response
+from flask import Flask, request, jsonify
 import json
-from flask import request
-import index
+import requests
+
 app = Flask(__name__)
 
-#------------------------------------------------------------------------------
-def NPKRequest(body):
-    print('body')
-    print(body)
-    
-    action = body['action'] #action부분만 추출
-    output = actionRequest(action) #actionRequest함수 호출
-    
-    print('output')
-    print(output)
-    
-    npkResponse = NPKResponse(output)
-    return npkResponse
-#------------------------------------------------------------------------------
-def actionRequest(action):
-    print('action')
-    print(action)
-    actionName = action['actionName'] #actionName 추출
-    parameters = action['parameters'] #parameters 추출
-    
-    #python은 switch문이 없으므로 if-else문으로 대체
 
-    if(actionName == 'Set_Location'):
-        output = index.Set_Location(parameters)
+# mysql 접속
+conn = pymysql.connect(host='45.119.146.152', port=1024, user='trivle', password='Trivle_96', db='trivle',
+                       use_unicode=True, charset='utf8')
 
-    elif(actionName == 'Set_List'):
-        output = index.Set_List(parameters)
-        
-    elif(actionName == 'Delete_List'):
-        output = index.Delete_List(parameters)
-        
-    elif(actionName == 'Listen_DTN_YES'):
-        output = index.Listen_DTN_YES(parameters)
-        
-    elif(actionName == 'Listen_DTN_NO'):
-        output = index.Listen_DTN_NO(parameters)
-        
-    elif((actionName == 'Listen_Category1') or (actionName == 'Listen_Category2')):
-        output = index.Listen(parameters)
-        
-    elif((actionName == 'Listen_Continue1') or (actionName == 'Listen_Continue2')):
-        output = index.Listen_Continue(parameters)
-        
-    elif(actionName == 'Checked_List'):
-        output = index.Checked_List(parameters)
-            
-    elif(actionName == 'Listen_Tip'):
-        output = index.Listen_Tip()
+
+# IP address of NodeMCU
+address = 'http://192.168.0.6'
+
+response_dict = {"response": {
+"outputSpeech": {
+"text": "",
+"type": "PlainText"
+},
+"shouldEndSession": True
+},
+"sessionAttributes": {},
+"version": "1.0"
+}
+
+
+@app.route('/', methods=['POST'])
+def index():
+    print(type(request.data))
+    print(type(request.json))
+
+    request_json = request.json
+    intent = get_intent_from_request(request_json)
+
+    result = ''
+    if intent == 'HELLO_INTENT':
+        result = handle_hello_intent()
+    elif intent == 'BYE_INTENT':
+        result = handle_bye_intent()
     else:
-        output = {}
-           
-    return output
-#------------------------------------------------------------------------------
-def NPKResponse(output):
-    npkResponse = {'version':'2.0', 'resultCode':'OK', 'output':output, 'directives': []}
-    print('npkResponse')
-    print(npkResponse)
-    return npkResponse
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-@app.route("/nugu/Set_Location", methods=['POST'])
-def nugu_set1():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
+        result = handle_fallback_intent()
 
-@app.route("/nugu/Set_List", methods=['POST'])
-def nugu_set():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
+    response_dict['response']['outputSpeech']['text'] = result
 
-@app.route("/nugu/Delete_List", methods=['POST'])
-def nugu_delete():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
+    return jsonify(json.dumps(response_dict))
 
-@app.route("/nugu/Listen_DTN_YES", methods=['POST'])
-def nugu_listen1():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
 
-@app.route("/nugu/Listen_DTN_NO", methods=['POST'])
-def nugu_listen2():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
+def get_intent_from_request(request_json):
+    intent = request_json['request']['intent']['name']
+    return intent
 
-@app.route("/nugu/Listen_Category1", methods=['POST'])
-def nugu_listen3():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
 
-@app.route("/nugu/Listen_Category2", methods=['POST'])
-def nugu_listen4():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
+def handle_hello_intent():
+    return "Hi my name is HR. Nice to meet you"
 
-@app.route("/nugu/Listen_Continue1", methods=['POST'])
-def nugu_listen5():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
 
-@app.route("/nugu/Listen_Continue2", methods=['POST'])
-def nugu_listen6():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)
-    return (json.dumps(npkResponse, ensure_ascii=False))
+def handle_bye_intent():
+    return "Bye bye~"
 
-@app.route("/nugu/Listen_Tip", methods=['POST'])
-def nugu_tip():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)   
-    return (json.dumps(npkResponse, ensure_ascii=False))
 
-@app.route("/nugu/Checked_List", methods=['POST'])
-def nugu_check():
-    body = request.json #전송받은 json 객체를 dictionary로 변환 
-    npkResponse = NPKRequest(body)   
-    return (json.dumps(npkResponse, ensure_ascii=False))
-#------------------------------------------------------------------------------
-if __name__ == '__main__':    
-    app.run(host="0.0.0.0", port=3000)
+def handle_fallback_intent():
+    return "I'm sorry, I can not understand."
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)
