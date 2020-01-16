@@ -69,10 +69,11 @@ def Sum():
 
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
+    sum = 0
     for i in rows:
         for j in i:
             # 가격을 가져와서 +   
-    
+            sum += j.가격
     # 장바구니 초기화
 
     reset_sql = "Truncate table //장바구니db name//"
@@ -116,8 +117,6 @@ def View_List():
             # 위와 같은 형태로 viewlist 생성하여 출력
             viewlist.append(cnt + ". " + j.품목 + "/" + j.가격 + "\n") #품목
           
-
-
     return viewlist
 
 # 크롤링
