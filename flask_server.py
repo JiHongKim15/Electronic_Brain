@@ -78,7 +78,7 @@ def Shopping(item):
     return "Ok"
 
 
-# 장바구니db 가져오기
+# 계산
 def Sum():
     cur = conn.cursor()
     sql = "SELECT * from orderlist where price"
@@ -108,10 +108,10 @@ def Plus_List(namelist, pricelist):
     
 
     # 장바구니 db 이용하여 추가
-    # 라면 / 가격 형태
+    # 항목 / 가격 형태
     
     for cnt in len(namelist):
-        sql = "Insert into brain values (" + namelist[cnt] + ", " + pricelist[cnt] + ")" "
+        sql = 'Insert into brain values (" + namelist[cnt] + ", " + pricelist[cnt] + ")" '
         cur.execute(sql)
 
     return "ok"
@@ -135,7 +135,7 @@ def View_List():
             # 2. [품목/가격]
             # 3. [품목/가격]
             # 위와 같은 형태로 viewlist 생성하여 출력
-            viewlist.append(cnt + ". " + j.품목 + "/" + j.가격 + "\n") #품목
+            viewlist.append(cnt + ". " + j. + "/" + j.price + "\n") #품목
           
     return viewlist
 
