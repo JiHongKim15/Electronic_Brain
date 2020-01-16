@@ -110,7 +110,7 @@ def Plus_List(namelist, pricelist):
     # 항목 / 가격 형태
     
     for cnt in len(namelist):
-        sql = 'Insert into brain values (' + namelist[cnt] + ',' + pricelist[cnt] + '')'
+        sql = "INSERT into orderlist values ('" + namelist[cnt] + " ', " + pricelist[cnt] + ')'
         cur.execute(sql)
 
     return "ok"
@@ -133,7 +133,7 @@ def View_List():
         # 2. [품목/가격]
         # 3. [품목/가격]
         # 위와 같은 형태로 viewlist 생성하여 출력
-        viewlist.append(cnt + ". " + i['product_name'] + "/" + i['price'] + "\n") #품목
+        viewlist.append(cnt + ". " + i['product_name'] + "/" + i['price'] + "원") #품목
 
     return viewlist
 
