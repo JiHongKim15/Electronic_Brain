@@ -6,11 +6,11 @@ from bs4 import BeautifulSoup
 import pymysql
 
 app = Flask(__name__)
-
+'''
 # mysql 접속
 conn = pymysql.connect(host='localhost', port=3306, user='root', password='toor', db='brain',
                        use_unicode=True, charset='utf8')
-
+'''
 # IP address of NodeMCU
 address = 'http://192.168.0.6'
 
@@ -37,7 +37,7 @@ def index():
     action = req['queryResult']['action']  # 1
     if action == 'aa':
         name = req['queryResult']['parameters']['size']  # 2
-        print(name)
+
 
     result = ''
     item = name;
@@ -66,6 +66,7 @@ def webhook():
     if action == 'aa':
         name = req['queryResult']['parameters']['item']
         item = name
+        print(name)
 
     else:
         return "test"
@@ -80,11 +81,12 @@ def Error():
 # 장보기 main
 def Shopping(item):
     namelist, pricelist = Name_Crawling(item)
-    Plus_List(namelist, pricelist)
+    print("Crawling 완료")
+ #   Plus_List(namelist, pricelist)
 
     return "Ok"
 
-
+'''
 # 계산
 def Sum():
     cur = conn.cursor()
@@ -142,7 +144,7 @@ def View_List():
 
     return viewlist
 
-
+'''
 # 크롤링
 def Name_Crawling(menu, sort="asc"):
     # "asc" : 낮은 가격순
