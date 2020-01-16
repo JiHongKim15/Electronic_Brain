@@ -34,10 +34,16 @@ def index():
     intent = get_intent_from_request(request_json)
 
     result = ''
-    if intent == 'HELLO_INTENT':
-        result = handle_hello_intent()
-    elif intent == 'BYE_INTENT':
-        result = handle_bye_intent()
+    
+    #장보기
+    #item은 dialogflow에서 목록을 받아와서 검색
+    if intent == '//장보기intent//':
+        result = Plus_List(item)
+    #합계
+    elif intent == '//합계intent':
+        result = Sum()
+    elif intent == '//목록보기':
+        result = 
     else:
         result = handle_fallback_intent()
 
@@ -46,21 +52,47 @@ def index():
     return jsonify(json.dumps(response_dict))
 
 
-def get_intent_from_request(request_json):
-    intent = request_json['request']['intent']['name']
+# 장바구니db  가져오기
+def Sum():
+    cur = conn.cursor()
+    sql = 'SELECT * from //장바구니db name//;'
+    cur.execute(sql)  # 쿼리 수행
+    conn.commit()
+
+    rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
+
+    
+    reset_sql = "Truncate table //장바구니db name//"
+    cur.execute(reset_sql)  # 쿼리 수행
+    conn.commit()
+
+    # 장바구니 초기화
+
+
+# 장바구니에 목록 추가
+def  Plus_List(item):
+    cur = conn.cursor()
+    
+    # 장바구니 db 가져옴
+    sql = 'SELECT * from //장바구니db name//;'
+    cur.execute(sql)  # 쿼리 수행
+    rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
+
+    # 장바구니 db 이용하여 추가
+    # 라면 / 가격 형태
+
     return intent
 
+# 리스트 보기
+def View_List():
+    cur = conn.cursor()
+    
+    # 장바구니 db 가져옴
+    sql = 'SELECT * from //장바구니db name//;'
+    cur.execute(sql)  # 쿼리 수행
+    rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
-def handle_hello_intent():
-    return "Hi my name is HR. Nice to meet you"
-
-
-def handle_bye_intent():
-    return "Bye bye~"
-
-
-def handle_fallback_intent():
-    return "I'm sorry, I can not understand."
+    return ""
 
 
 if __name__ == '__main__':
