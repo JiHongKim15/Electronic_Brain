@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 import json
+import os
 import requests
 from bs4 import BeautifulSoup
 
@@ -51,6 +52,20 @@ def index():
     response_dict['response']['outputSpeech']['text'] = result
 
     return jsonify(json.dumps(response_dict))
+
+
+@app.route('/webhook', methods=['GET', 'POST'])
+def webhook():
+    req = request.get_json(force=True)
+    action = req['queryResult']['action']
+    if action == 'interest':
+        name = req['queryResult']['parameters']['roominfomation']
+
+    else:
+        return "test"
+
+    return {'fulfillmentText': name}
+
 
 def Error():
     return "error"
