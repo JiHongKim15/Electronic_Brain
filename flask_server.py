@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import json
 import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
@@ -123,13 +124,36 @@ def View_List():
     return viewlist
 
 # 크롤링
-def Name_Crawling():
-    # 코드를 채워주세욤
-    return namelist
+def Name_Crawling(menu, sort):
+    # "asc" : 낮은 가격순
+    # "dsc" : 높은 가격순
+    url = "https://search.shopping.naver.com/search/all.nhn?origQuery=" + menu + "&pagingIndex=1&pagingSize=40&viewType=list&sort=price_" + sort + "&query=" + menu
+    response = requests.get(url)
 
-def Price_Crawling():
-    
-    return pricelist
+    data = response.text
+    soup = BeautifulSoup(data, 'html.parser')
+
+    attr_name = {'class': 'link'}
+    attr_price = {'class': 'num _price_reload', }
+
+    name = soup.find_all('a', attrs=attr_name)
+    price = soup.find_all('span', attrs=attr_price)
+
+    result_price = list(price)
+    real_price = []
+    for i in result_price:
+        # print(str(i)[63:-7])
+        real_price.append(str(i)[63:-7])
+
+    result_name = list(name)
+    real_name = []
+
+    for i in result_name:
+        title_idx = str(i).find("title")
+        # print(str(i)[title_idx+7:-4])
+        real_name.append(str(i)[title_idx + 7:-4])
+
+    return real_name, real_price
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
