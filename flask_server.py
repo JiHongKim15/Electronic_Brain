@@ -45,11 +45,14 @@ def index():
     elif intent == '//목록보기':
         result = View_List()
     else:
-        result = handle_fallback_intent()
+        result = Error()
 
     response_dict['response']['outputSpeech']['text'] = result
 
     return jsonify(json.dumps(response_dict))
+
+def Error():
+    return "error"
 
 #장보기 main
 def Shopping(item):
@@ -57,7 +60,7 @@ def Shopping(item):
     pricelist = Price_Crawling()
     Plus_List()
 
-    return ""
+    return "Ok"
 
 
 # 장바구니db 가져오기
