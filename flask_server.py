@@ -125,7 +125,7 @@ def View_List():
     cur.execute(sql)  # 쿼리 수행
     rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
 
-    viewlist[] = {}
+    viewlist = []
 
     cnt = 1
     for i in rows:
