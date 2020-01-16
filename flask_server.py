@@ -91,19 +91,14 @@ def Sum():
 def Plus_List(namelist, pricelist):
     cur = conn.cursor()
     
-    # 장바구니 db 가져옴
-    sql = 'SELECT * from //장바구니db name//;'
-    cur.execute(sql)  # 쿼리 수행
-    rows = cur.fetchall()  # 결과 가져옴(데이터타입: 튜플)
-
     # 장바구니 db 이용하여 추가
     # 라면 / 가격 형태
+    
+    for cnt in len(namelist):
+        sql = "Insert into brain values (" + namelist[cnt] + ", " + pricelist[cnt] + ")" "
+        cur.execute(sql)
 
-    for i in rows:
-        for j in i:
-            
-
-    return intent
+    return "ok"
 
 # 리스트 보기
 def View_List():
