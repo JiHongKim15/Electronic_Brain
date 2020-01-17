@@ -6,11 +6,11 @@ from bs4 import BeautifulSoup
 import pymysql
 
 app = Flask(__name__)
-'''
+
 # mysql 접속
 conn = pymysql.connect(host='localhost', port=3306, user='root', password='toor', db='brain',
                        use_unicode=True, charset='utf8')
-'''
+
 # IP address of NodeMCU
 address = 'http://192.168.0.6'
 
