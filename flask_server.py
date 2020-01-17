@@ -40,20 +40,25 @@ def index():
 
 
     result = ''
-    item = name;
+    item = name
     # 장보기
     # item은 dialogflow에서 목록을 받아와서 검색
-    '''
-    if intent == 'menu-search':
+
+    #intent 받아오기
+
+    intent = req.get('queryResult').get('action')
+
+
+    if intent == 'menu - search':
         result = Shopping(item)
     #합계
-    elif intent == 'menu-last':
+    elif intent == 'menu - last':
         result = Sum()
     elif intent == '//목록보기':
         result = View_List()
     else:
         result = Error()
-    '''
+
     response_dict['response']['outputSpeech']['text'] = result
 
     return jsonify(json.dumps(response_dict))
@@ -86,7 +91,6 @@ def Shopping(item):
 
     return "Ok"
 
-'''
 # 계산
 def Sum():
     cur = conn.cursor()
@@ -144,7 +148,6 @@ def View_List():
 
     return viewlist
 
-'''
 # 크롤링
 def Name_Crawling(menu, sort="asc"):
     # "asc" : 낮은 가격순
