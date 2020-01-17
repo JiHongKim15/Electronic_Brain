@@ -119,12 +119,15 @@ def Plus_List(namelist, pricelist):
     # 장바구니 db 이용하여 추가
     # 항목 / 가격 형태
 
+    sql = "INSERT into orderlist values ('" + namelist[0] + " ', " + pricelist[0] + ')'
+
+    '''
     for cnt in len(namelist):
-        sql = "INSERT into orderlist values ('" + namelist[cnt] + " ', " + pricelist[cnt] + ')'
+        # sql = "INSERT into orderlist values ('" + namelist[cnt] + " ', " + pricelist[cnt] + ')'
         cur.execute(sql)
 
     return "ok"
-
+    '''
 
 # 리스트 보기
 def View_List():
